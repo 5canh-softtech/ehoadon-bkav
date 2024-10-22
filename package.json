@@ -1,6 +1,6 @@
 {
   "name": "ehoadon-bkav",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple NPM package to interact with Bkav eHoaDon WebService, supporting invoice creation with attachments",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,5 +28,13 @@
     "@types/node": "^22.7.7",
     "@types/xml2js": "^0.4.14",
     "typescript": "^5.6.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/5canh-softtech/ehoadon-bkav.git"
+  },
+  "bugs": {
+    "url": "https://github.com/5canh-softtech/ehoadon-bkav/issues"
+  },
+  "homepage": "https://github.com/5canh-softtech/ehoadon-bkav#readme"
 }

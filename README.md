@@ -1,5 +1,7 @@
 # ehoadon-bkav
 
+![npm](https://img.shields.io/npm/dw/ehoadon-bkav)
+
 ## Mô Tả
 
 `ehoadon-bkav` là một thư viện NPM đơn giản giúp tương tác với **Bkav eHoaDon WebService**. Thư viện hỗ trợ tạo hóa đơn điện tử với khả năng đính kèm các tập tin (attachments), phù hợp cho các doanh nghiệp cần tích hợp hệ thống quản lý hóa đơn vào ứng dụng của mình.
