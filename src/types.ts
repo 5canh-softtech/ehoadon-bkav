@@ -19,11 +19,11 @@ export interface InvoiceDetail {
   Price: number;
   Amount: number;
   TaxRateID: number;
-  TaxRate: number;
+  TaxRate?: number;
   TaxAmount: number;
   IsDiscount: boolean;
   IsIncrease: boolean | null;
-  ItemTypeID: number;
+  ItemTypeID?: number;
 }
 
 export interface InvoiceAttachFile {
@@ -36,32 +36,34 @@ export interface Invoice {
   InvoiceTypeID: number;
   InvoiceDate: string;
   BuyerName: string;
-  BuyerTaxCode: string;
+  BuyerTaxCode: string | number;
   BuyerUnitName: string;
   BuyerAddress: string;
-  BuyerBankAccount: string;
+  BuyerBankAccount: string | number;
   PayMethodID: number;
   ReceiveTypeID: number;
   ReceiverEmail: string;
-  ReceiverMobile: string;
+  ReceiverMobile: string | number;
   ReceiverAddress: string;
   ReceiverName: string;
   Note: string;
-  BillCode: string;
+  BillCode: string | number;
   CurrencyID: string;
   ExchangeRate: number;
-  InvoiceForm: string;
-  InvoiceSerial: string;
-  InvoiceNo: number;
-  OriginalInvoiceIdentify: string;
+  InvoiceForm?: string;
+  InvoiceSerial?: string;
+  InvoiceNo?: number;
+  OriginalInvoiceIdentify?: string;
+  InvoiceStatusID: number | string;
+  [key: string]: string | number | undefined;
 }
 
 export interface CommandObjectCreateUpdate {
   Invoice: Invoice;
   ListInvoiceDetailsWS: InvoiceDetail[];
   ListInvoiceAttachFileWS: InvoiceAttachFile[];
-  PartnerInvoiceID: number;
-  PartnerInvoiceStringID: string;
+  PartnerInvoiceID?: number;
+  PartnerInvoiceStringID?: string;
 }
 
 export interface CommandDataCreateUpdate {
@@ -70,8 +72,8 @@ export interface CommandDataCreateUpdate {
 }
 
 export interface CommandObjectCancel {
-  PartnerInvoiceID: number;
-  PartnerInvoiceStringID: string;
+  PartnerInvoiceID?: number;
+  PartnerInvoiceStringID?: string;
 }
 
 export interface CommandDataCancel {
