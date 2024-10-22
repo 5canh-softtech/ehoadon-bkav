@@ -1,7 +1,7 @@
 {
   "name": "ehoadon-bkav",
-  "version": "1.0.4",
-  "description": "A simple NPM package to interact with Bkav eHoaDon WebService, supporting invoice creation with attachments",
+  "version": "1.0.6",
+  "description": "A simple NPM package to interact with Bkav eHoaDon WebService",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

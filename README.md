@@ -1,146 +1,167 @@
 # ehoadon-bkav
 
-![npm](https://img.shields.io/npm/dw/ehoadon-bkav)
+[![npm version](https://badge.fury.io/js/ehoadon-bkav.svg)](https://badge.fury.io/js/ehoadon-bkav)
+[![npm downloads](https://img.shields.io/npm/dt/ehoadon-bkav.svg)](https://www.npmjs.com/package/ehoadon-bkav)
 
-## Mô Tả
+`ehoadon-bkav` là một gói NPM đơn giản để tương tác với WebService Bkav eHoaDon, hỗ trợ việc gửi, nhận, và quản lý hóa đơn thông qua SOAP và mã hóa dữ liệu.
 
-`ehoadon-bkav` là một thư viện NPM đơn giản giúp tương tác với **Bkav eHoaDon WebService**. Thư viện hỗ trợ tạo hóa đơn điện tử với khả năng đính kèm các tập tin (attachments), phù hợp cho các doanh nghiệp cần tích hợp hệ thống quản lý hóa đơn vào ứng dụng của mình.
+## Cài đặt
 
-### Tính Năng Chính
-
-- **Tạo Hóa Đơn:** Tạo hóa đơn điện tử với đầy đủ thông tin khách hàng, dịch vụ và các tệp đính kèm.
-- **Hỗ Trợ Đính Kèm Tệp:** Đính kèm các tập tin như PDF, hình ảnh vào hóa đơn.
-- **Cấu Hình Linh Hoạt:** Hỗ trợ cấu hình cho chế độ sản xuất (`prod`) và phát triển (`dev`).
-- **Bảo Mật:** Sử dụng mã hóa AES-256-CBC để bảo vệ dữ liệu truyền tải.
-
-## Cài Đặt
-
-Bạn có thể cài đặt thư viện này thông qua **npm** hoặc **yarn**:
+Bạn có thể cài đặt gói này bằng cách sử dụng NPM hoặc Yarn:
 
 ```bash
 npm install ehoadon-bkav
 ```
 
+Hoặc
+
 ```bash
-yarn install ehoadon-bkav
+yarn add ehoadon-bkav
 ```
 
-## Cấu Hình
+## Cách sử dụng
 
-Trước khi sử dụng thư viện, bạn cần cấu hình các thông số cần thiết như partnerGUID và partnerToken. Đảm bảo rằng bạn đã có các thông tin này từ Bkav eHoaDon.
+### Ví dụ 1: Tạo hóa đơn mới
 
-```bash
-import { Config } from 'ehoadon-bkav';
+```typescript
+import { execCommand } from "ehoadon-bkav";
+import { Config, CommandDataCreateUpdate } from "./types";
 
 const config: Config = {
-  partnerGUID: 'YOUR_PARTNER_GUID',
-  partnerToken: 'YOUR_KEY_BASE64:YOUR_IV_BASE64',
-  mode: 'dev', // hoặc 'prod' cho chế độ sản xuất
-};
-```
-
-### Mô Tả Các Trường Cấu Hình
-
-- **partnerGUID:** Mã định danh đối tác cung cấp bởi Bkav eHoaDon.
-- **partnerToken:** Chuỗi token bao gồm keyBase64 và ivBase64, được phân cách bởi dấu hai chấm (:).
-- **mode:** Chế độ hoạt động của thư viện, có thể là 'prod' (sản xuất) hoặc 'dev' (phát triển). Mặc định là 'dev'.
-
-## Sử Dụng
-
-### Tạo Hóa Đơn
-
-Dưới đây là cách sử dụng phương thức createInvoice để tạo hóa đơn điện tử với các tệp đính kèm.
-
-```bash
-import { createInvoice, Config, CommandData, CreateInvoiceCommandObject, Attachment } from 'ehoadon-bkav';
-import fs from 'fs';
-import path from 'path';
-
-// Cấu hình thư viện
-const config: Config = {
-  partnerGUID: 'YOUR_PARTNER_GUID',
-  partnerToken: 'YOUR_KEY_BASE64:YOUR_IV_BASE64',
-  mode: 'dev', // hoặc 'prod'
+  partnerGUID: "your-partner-guid",
+  partnerToken: "your-partner-token", // Dạng "keyBase64:ivBase64"
+  mode: "dev", // hoặc "prod" cho môi trường sản xuất
 };
 
-// Hàm đọc tệp và chuyển đổi nội dung sang Base64
-function readFileAsBase64(filePath: string): string {
-  const fileBuffer = fs.readFileSync(filePath);
-  return fileBuffer.toString('base64');
-}
-
-// Tạo danh sách các tệp đính kèm (nếu có)
-const attachments: Attachment[] = [
-  {
-    FileName: 'invoice.pdf',
-    FileContent: readFileAsBase64(path.join(__dirname, 'invoice.pdf')),
-    FileType: 'application/pdf',
-  },
-  // Thêm các tệp khác nếu cần
-];
-
-// Dữ liệu tạo hóa đơn
-const createCommandObject: CreateInvoiceCommandObject = {
-  Invoice: {
-    InvoiceTypeID: 1, // Hóa đơn giá trị gia tăng
-    InvoiceDate: new Date().toISOString(),
-    BuyerName: "Nguyen Van A",
-    BuyerTaxCode: "0123456789",
-    BuyerUnitName: "CONG TY ABC",
-    BuyerAddress: "So 123, Duong ABC, Q. Hai Ba Trung",
-    BuyerBankAccount: "",
-    PayMethodID: 2, // 2 - Chuyển khoản
-    ReceiveTypeID: 1, // 1 - Email
-    ReceiverEmail: "testABC@gmail.com",
-    ReceiverMobile: "0909111111",
-    ReceiverAddress: "So 123, Duong ABC, Q. Hai Ba Trung",
-    ReceiverName: "Nguyen Van A",
-    Note: "Test eHoaDon",
-    BillCode: "UYU150294",
-    CurrencyID: "VND",
-    ExchangeRate: 1.0,
-    InvoiceStatusID: 1, // Mới tạo
-    SignedDate: new Date().toISOString(),
-  },
-  ListInvoiceDetailsWS: [
+const commandData: CommandDataCreateUpdate = {
+  CmdType: 100,
+  CommandObject: [
     {
-      ItemName: "Gói 500k",
-      UnitName: "Gói",
-      Qty: 1.0,
-      Price: 500000,
-      Amount: 500000,
-      TaxRateID: 3, // 10%
-      TaxAmount: 50000,
-      IsDiscount: false,
-      IsIncrease: null,
+      Invoice: {
+        InvoiceTypeID: 1,
+        InvoiceDate: "2023-10-22",
+        BuyerName: "Nguyễn Văn A",
+        BuyerTaxCode: "0101234567",
+        BuyerUnitName: "Công Ty TNHH ABC",
+        BuyerAddress: "Số 1 Đường ABC, Quận XYZ, Hà Nội",
+        BuyerBankAccount: "0123456789 - Ngân hàng XYZ",
+        PayMethodID: 1,
+        ReceiveTypeID: 3,
+        ReceiverEmail: "nguyenvana@example.com",
+        ReceiverMobile: "0912345678", // Số điện thoại 10 số
+        ReceiverAddress: "Số 2 Đường DEF, Quận GHI, Hà Nội",
+        ReceiverName: "Nguyễn Văn A",
+        Note: "Test eHoaDon",
+        BillCode: "HD123456",
+        CurrencyID: "VND",
+        ExchangeRate: 1.0,
+        InvoiceForm: "",
+        InvoiceSerial: "",
+        InvoiceNo: 0,
+        OriginalInvoiceIdentify: "",
+      },
+      ListInvoiceDetailsWS: [
+        {
+          ItemName: "Dịch vụ A",
+          UnitName: "Gói",
+          Qty: 1.0,
+          Price: 1000000,
+          Amount: 1000000,
+          TaxRateID: 3,
+          TaxRate: 10,
+          TaxAmount: 100000,
+          IsDiscount: false,
+          IsIncrease: true,
+          ItemTypeID: 1,
+        },
+      ],
+      ListInvoiceAttachFileWS: [],
+      PartnerInvoiceID: 123456,
+      PartnerInvoiceStringID: "INV-123456",
     },
   ],
-  PartnerInvoiceStringID: "UYU150294",
-  ListInvoiceAttachFileWS: attachments.length > 0 ? attachments : undefined, // Thêm tệp đính kèm nếu có
 };
 
-const createCommandData: CommandData = {
-  CmdType: 100, // Tạo HĐ mới, eHD tự cấp InvoiceForm, InvoiceSerial; InvoiceNo = 0
-  CommandObject: [createCommandObject],
-};
-
-// Tạo hóa đơn
-async function runCreateInvoice() {
-  const response = await createInvoice(config, createCommandData);
-  if (response.success) {
-    console.log("Hóa đơn được tạo thành công:", response.data);
+async function sendInvoice() {
+  const result = await execCommand(config, commandData);
+  if (result.success) {
+    console.log("Hóa đơn đã được gửi thành công:", result.data);
   } else {
-    console.error("Lỗi khi tạo hóa đơn:", response.error);
+    console.error("Lỗi khi gửi hóa đơn:", result.error);
   }
 }
 
-runCreateInvoice();
+sendInvoice();
 ```
 
-## Đóng Góp
+### Ví dụ 2: Huỷ hoá đơn
 
-Chúng tôi hoan nghênh mọi đóng góp từ cộng đồng để cải thiện thư viện này. Bạn có thể đóng góp bằng cách:
+```typescript
+import { execCommand } from "ehoadon-bkav";
+import { Config, CommandDataCancel } from "./types";
 
-- Fork repository này.
-- Tạo một nhánh mới cho tính năng hoặc sửa lỗi.
-- Gửi Pull Request với mô tả chi tiết về các thay đổi.
+const config: Config = {
+  partnerGUID: "your-partner-guid",
+  partnerToken: "your-partner-token",
+  mode: "prod", // Môi trường sản xuất
+};
+
+const commandData: CommandDataCancel = {
+  CmdType: 202,
+  CommandObject: [
+    {
+      PartnerInvoiceID: 123456,
+      PartnerInvoiceStringID: "INV-123456",
+    },
+  ],
+};
+
+async function cancelInvoice() {
+  const result = await execCommand(config, commandData);
+  if (result.success) {
+    console.log("Hóa đơn đã được huỷ thành công:", result.data);
+  } else {
+    console.error("Lỗi khi huỷ hoá đơn:", result.error);
+  }
+}
+
+cancelInvoice();
+```
+
+### Ví dụ 3: Lấy thông tin hoá đơn
+
+```typescript
+import { execCommand } from "ehoadon-bkav";
+import { Config, CommandDataInquiry } from "./types";
+
+const config: Config = {
+  partnerGUID: "your-partner-guid",
+  partnerToken: "your-partner-token",
+  mode: "prod",
+};
+
+const commandData: CommandDataInquiry = {
+  CmdType: 800,
+  CommandObject: "9ea9db57-b8c4-4149-9dce-2fd8b73712fd", // InvoiceGUID
+};
+
+async function getInvoiceDetails() {
+  const result = await execCommand(config, commandData);
+  if (result.success) {
+    console.log("Chi tiết hóa đơn:", result.data);
+  } else {
+    console.error("Lỗi khi lấy thông tin hoá đơn:", result.error);
+  }
+}
+
+getInvoiceDetails();
+```
+
+## Tham số
+
+- `Config`: Cấu hình bao gồm `partnerGUID`, `partnerToken`, và chế độ `dev` hoặc `prod`.
+- `CommandData`: Dữ liệu gửi đi cho hóa đơn, hủy hóa đơn hoặc các yêu cầu khác.
+
+## License
+
+MIT License © 2024 5Canh Softtech
